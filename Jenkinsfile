@@ -5,7 +5,7 @@ pipeline {
         GIT_CRED     = 'git-cred-id'
         NEXUS_CRED   = 'nexus-cred-id'
         TOMCAT_CRED  = 'tomcat-cred-id'
-        TOMCAT_URL   = 'http://tomcat-server:8080'
+        TOMCAT_URL   = 'http://15.206.168.45:8083'
         SONAR_SERVER = 'SonarQube'
         MVN_HOME     = tool 'Maven 3'
     }
@@ -66,7 +66,7 @@ pipeline {
 
                     sh """
                         curl -u ${TOMCAT_USER}:${TOMCAT_PASS} --upload-file target/*.war \
-                        "${15.206.168.45:8083}/manager/text/deploy?path=/mywebapp&update=true"
+                        "${TOMCAT_URL}/manager/text/deploy?path=/mywebapp&update=true"
                     """
                 }
             }

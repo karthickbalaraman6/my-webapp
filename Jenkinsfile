@@ -36,7 +36,7 @@ pipeline {
 
         stage('Publish to Nexus') {
             steps {
-                withCredentials([usernamePassword(credentialsId: jenkins, usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: NEXUS_CRED, usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASSWORD')]) {
 
                     writeFile file: 'settings.xml', text: """
 <settings>

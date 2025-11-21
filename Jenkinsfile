@@ -37,7 +37,7 @@ pipeline {
         stage('Publish to Nexus') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: NEXUS_CRED,
+                    credentialsId: jenkins,
                     usernameVariable: 'NEXUS_USER',
                     passwordVariable: 'NEXUS_PASSWORD'
                 )]) {

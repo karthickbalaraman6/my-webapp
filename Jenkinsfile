@@ -36,11 +36,7 @@ pipeline {
 
         stage('Publish to Nexus') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: jenkins,
-                    usernameVariable: 'NEXUS_USER',
-                    passwordVariable: 'NEXUS_PASSWORD'
-                )]) {
+                withCredentials([usernamePassword(credentialsId: jenkins, usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASSWORD')]) {
 
                     writeFile file: 'settings.xml', text: """
 <settings>
@@ -57,7 +53,7 @@ pipeline {
     </server>
   </servers>
 </settings>
-                    """
+"""
 
                     sh "${MVN_HOME}/bin/mvn -B deploy -s settings.xml -DskipTests"
                 }
@@ -66,20 +62,23 @@ pipeline {
 
         stage('Deploy to Tomcat') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: TOMCAT_CRED,
-                    usernameVariable: 'TOMCAT_USER',
-                    passwordVariable: 'TOMCAT_PASS'
-                )]) {
+                withCredentials([usernamePassword(credentialsId: TOMCAT_CRED, usernameVariable: 'TOMCAT_USER', passwordVariable: 'TOMCAT_PASS')]) {
+
                     sh """
-                    curl -u ${TOMCAT_USER}:${TOMCAT_PASS} \
-                    --upload-file target/*.war \
-                    "${TOMCAT_URL}/manager/text/deploy?path=/mywebapp&update=true"
+                        curl -u ${TOMCAT_USER}:${TOMCAT_PASS} --upload-file target/*.war \
+                        "${TOMCAT_URL}/manager/text/deploy?path=/mywebapp&update=true"
                     """
                 }
             }
         }
+    }
 
-    } // END stages
-
-} // END pipeline
+    post {
+        success {
+            echo "BUILD SUCCESS"
+        }
+        failure {
+            echo "BUILD FAILED"
+        }
+    }
+}
